@@ -72,7 +72,7 @@ function PostUpload({setNewPost}) {
   };
   return (
     <div className="postupload">
-      <Input
+      <input
         id="fileinput"
         style={{marginTop: "30px"}}
         className="child"
