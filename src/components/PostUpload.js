@@ -78,6 +78,7 @@ function PostUpload({setNewPost}) {
         className="child"
         type="file"
         name="upload-file"
+        accept="image/png, image/jpeg"
         onChange={chooseFile}
       />
       {/* <progress className="child" max={100} value={progress}/> */}
