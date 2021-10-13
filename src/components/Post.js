@@ -6,7 +6,7 @@ import Comments from "./Comments";
 
 function Post({postID, user, username, caption, imageURL}) {
   const [newComment, setNewComment] = useState({});
-  let baseImageURL = "https://ig-clone-backend.herokuapp.com";
+  let baseImageURL = `${window.location.protocol}//${window.location.hostname}:3001`;
   return (
     <div className="post">
       <div className="post__header">
