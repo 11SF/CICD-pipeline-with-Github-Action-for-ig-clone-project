@@ -49,6 +49,7 @@ jobs:
       if: success()
       uses: docker/build-push-action@v2
       with:
+        context: .Frontend
         push: true
         tags: 11sf/ig_clone_frontend:latest
     
