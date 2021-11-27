@@ -7,7 +7,7 @@ on:
     branches: [ main ]  
   
 jobs:
-  build:
+  Frontend:
 
     runs-on: ubuntu-latest
     defaults:
@@ -24,11 +24,6 @@ jobs:
         ref: dev
 
     - run: ls
-
-    - run: cd ./Frontend
-
-    - run: ls
-
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
