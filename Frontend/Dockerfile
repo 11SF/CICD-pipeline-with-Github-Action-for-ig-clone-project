@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM node:lts-alpine3.14
 
 COPY . /user/app
 WORKDIR /user/app
