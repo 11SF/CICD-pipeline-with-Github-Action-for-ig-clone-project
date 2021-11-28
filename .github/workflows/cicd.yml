@@ -7,7 +7,7 @@ on:
     branches: [dev]
 
 jobs:
-  Continuous Integration (Frontend):
+  Continuous-Integration-(Frontend):
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -54,7 +54,7 @@ jobs:
           push: true
           tags: 11sf/ig_clone_frontend:latest
 
-  Continuous Integration (Backend):
+  Continuous-Integration-(Backend):
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -101,7 +101,7 @@ jobs:
           push: true
           tags: 11sf/ig_clone_backend:latest
 
-  Continuous Deployment:
+  Continuous-Deployment:
     needs: [Continuous Integration (Frontend), Continuous Integration (Backend)]
     if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}
     runs-on: ubuntu-latest
