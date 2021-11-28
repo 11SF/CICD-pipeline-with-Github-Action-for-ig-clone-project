@@ -1,6 +1,6 @@
 FROM node:alpine
 
-COPY . /user/app
+COPY ./Frontend /user/app
 WORKDIR /user/app
 
 RUN npm install
