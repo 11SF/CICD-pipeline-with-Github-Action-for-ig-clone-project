@@ -79,11 +79,11 @@ jobs:
           cache-dependency-path: Backend/package-lock.json
 
       - name: Create .env file
-          - run: echo ${{ secrets.ENV_PORT }} >> .env
-          - run: echo ${{ secrets.ENV_DB_USERNAME }} >> .env
-          - run: echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
-          - run: echo ${{ secrets.ENV_DB_NAME }} >> .env
-          - run: echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
+        - run: echo ${{ secrets.ENV_PORT }} >> .env
+        - run: echo ${{ secrets.ENV_DB_USERNAME }} >> .env
+        - run: echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
+        - run: echo ${{ secrets.ENV_DB_NAME }} >> .env
+        - run: echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
 
       # - run: npm ci
       - run: npm i
