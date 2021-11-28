@@ -7,4 +7,5 @@ sudo service docker start
 sudo gpasswd -a ec2-user docker
 newgrp docker
 
-docker run -dp 3000:3000 11sf/ig_clone_frontend
+docker run -t -d -p 80:3000 11sf/ig_clone_frontend
+docker run -t -d -p 3001:3001 11sf/ig_clone_backend
