@@ -1,20 +1,22 @@
-import {Button, Input} from "@material-ui/core";
-import React, {useState} from "react";
+import { Button, Input } from "@material-ui/core";
+import React, { useState, useRef } from "react";
 import axios from "../axios";
 import "../css/PostUpload.css";
 
-function PostUpload({setNewPost}) {
+function PostUpload({ setNewPost }) {
   const [file, setFile] = useState(null);
   const [caption, setCaption] = useState("");
-  const chooseFile = e => {
+  const ref = useRef();
+
+  const chooseFile = (e) => {
     if (e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
   async function resizeMe(img) {
-    var max_width = 500;
-    var max_height = 500;
+    var max_width = 1024;
+    var max_height = 1024;
 
     var canvas = document.createElement("canvas");
     const bitmap = await createImageBitmap(img);
@@ -47,7 +49,7 @@ function PostUpload({setNewPost}) {
     for (var i = 0; i < blobBin.length; i++) {
       array.push(blobBin.charCodeAt(i));
     }
-    var file = new Blob([new Uint8Array(array)], {type: "image/png"});
+    var file = new Blob([new Uint8Array(array)], { type: "image/png" });
 
     return file; // get the data from canvas as 70% JPG (can be also PNG, etc.)
   }
@@ -65,44 +67,71 @@ function PostUpload({setNewPost}) {
     if (res.data.status) {
       setFile(null);
       setCaption("");
-      setNewPost(res.data.post)
+      setNewPost(res.data.post);
+      ref.current.value = "";
     } else {
       alert(res.data.msg);
+      ref.current.value = "";
     }
   };
   return (
     <div className="postupload">
       <input
         id="fileinput"
-        style={{marginTop: "30px"}}
+        style={{ marginTop: "30px" }}
         className="child"
         type="file"
         name="upload-file"
         accept="image/png, image/jpeg"
         onChange={chooseFile}
+        ref={ref}
       />
       {/* <progress className="child" max={100} value={progress}/> */}
       <Input
         className="child"
         type="text"
+        style={{
+          backgroundColor: "#f4f4f4",
+          padding: "10px 15px",
+          marginTop: "30px",
+          border: "1px solid #f1f1f1",
+          color: "black",
+        }}
         name="upload-caption"
         placeholder="write your caption here"
         value={caption}
-        onChange={e => setCaption(e.target.value)}
+        onChange={(e) => setCaption(e.target.value)}
       />
-      <Button
-        variant="contained"
-        style={{
-          backgroundColor: "#228B22",
-          padding: "10px 15px",
-          marginBottom: "30px",
-          color: "white",
-        }}
-        className="child"
-        onClick={createPost}
-      >
-        Upload
-      </Button>
+      {file ? (
+        <Button
+          variant="contained"
+          style={{
+            backgroundColor: "#228B22",
+            padding: "10px 15px",
+            marginBottom: "30px",
+            color: "white",
+          }}
+          className="child"
+          onClick={createPost}
+        >
+          Upload
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          disabled
+          style={{
+            backgroundColor: "#f4f4f4",
+            padding: "10px 15px",
+            marginBottom: "30px",
+            color: "black",
+          }}
+          className="child"
+          
+        >
+          Upload
+        </Button>
+      )}
       <div id="preview"></div>
     </div>
   );

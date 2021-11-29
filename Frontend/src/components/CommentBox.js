@@ -2,22 +2,24 @@ import React, { useState } from "react";
 import styled from "styled-components/macro";
 import axios from "../axios";
 
-function CommentBox({user, postID, setNewComment}) {
+function CommentBox({ user, postID, setNewComment }) {
   const [comment, setComment] = useState("");
-  const submitHandler = async event => {
-    const newComment = {
-      id: postID,
-      text: comment,
-      username: user.username,
-    };
+  const submitHandler = async (event) => {
     event.preventDefault();
-    const res = await axios.put("/post/createComment", newComment, {
-      headers: {"x-access-token": sessionStorage.getItem("userToken")},
-    });
+    if (comment) {
+      const newComment = {
+        id: postID,
+        text: comment,
+        username: user.username,
+      };
+      const res = await axios.put("/post/createComment", newComment, {
+        headers: { "x-access-token": sessionStorage.getItem("userToken") },
+      });
 
-    if (res.data.status) {
-      setNewComment(newComment);
-      setComment("");
+      if (res.data.status) {
+        setNewComment(newComment);
+        setComment("");
+      }
     }
   };
   return (
@@ -26,7 +28,7 @@ function CommentBox({user, postID, setNewComment}) {
         <Wrapper>
           <InputComment
             value={comment}
-            onChange={e => setComment(e.target.value)}
+            onChange={(e) => setComment(e.target.value)}
             type="text"
             placeholder="Add comment here..."
           />

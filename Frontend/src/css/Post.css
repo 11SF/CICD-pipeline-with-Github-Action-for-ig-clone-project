@@ -5,15 +5,24 @@
     margin-bottom: 20px;
 }
 
+.post__header_section{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding:20px;
+}
+
 .post__header{
     display: flex;
     align-items: center;
-    padding:20px;
 }
 .post__avatar{
-    margin-right: 10px;
+    margin-right: 15px;
 }
-
+.like_section {
+    display: flex;
+    justify-content: end;
+}
 .post__image {
     object-fit: contain;
     width: 100%;

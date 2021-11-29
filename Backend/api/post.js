@@ -74,8 +74,9 @@ router.put("/createComment", auth, async (req, res) => {
   }
 });
 
-router.put("/likePress", async (req, res) => {
-  const { owner_id, id } = req.body;
+router.put("/likePress/:id", async (req, res) => {
+  const id = req.params.id;
+  const owner_id = req.body.owner_id
   try {
     if (!owner_id || !id) {
       return res.status(400).json({
@@ -85,7 +86,7 @@ router.put("/likePress", async (req, res) => {
     }
 
     const post = await Post.findById(id);
-    if (post.size !== 0) {
+    if (post.length !== 0) {
       let arr_id = post.like_count;
       let isLike = arr_id.filter((e) => e === owner_id);
       console.log(isLike);
@@ -93,16 +94,19 @@ router.put("/likePress", async (req, res) => {
         arr_id = [...arr_id, owner_id];
         const result = await Post.findByIdAndUpdate(id, { like_count: arr_id });
         console.log(result);
-        return res.status(200).json({ status: true, like_count: arr_id.length });
+        return res
+          .status(200)
+          .json({ status: true, liked: true, like_count: arr_id });
       } else {
         arr_id = arr_id.filter((e) => e !== owner_id);
         const result = await Post.findByIdAndUpdate(id, { like_count: arr_id });
         console.log(result);
         return res
           .status(200)
-          .json({ status: true, like_count: arr_id.length });
+          .json({ status: true, liked: false, like_count: arr_id });
       }
     }
+    res.status(500).json({ status: false, msg: "error" });
   } catch (err) {
     res.status(500).json({ status: false, msg: err.message });
   }
@@ -126,20 +130,27 @@ router.get("/getComment/:id", async (req, res) => {
   res.status(200).json({ status: true, comments: comments });
 });
 
-router.delete("/deleteComment/:id", async (req, res) => {
+router.delete("/deleteComment/:id", auth, async (req, res) => {
   let id = req.params.id;
-
+  const owner_id = req.user.id;
   try {
-    Comment.findByIdAndRemove(id, (err, result) => {
-      if (err) {
-        res.status(500).json({ status: false, msg: err.message });
-      } else {
-        console.log(result);
-        return res
-          .status(200)
-          .json({ status: true, msg: "Delete comment successfully" });
-      }
-    });
+    let comment = await Comment.findById(id);
+    if (comment.owner_id === owner_id) {
+      Comment.findByIdAndRemove(id, (err, result) => {
+        if (err) {
+          res.status(500).json({ status: false, msg: err.message });
+        } else {
+          console.log(result);
+          return res
+            .status(200)
+            .json({ status: true, msg: "Delete comment successfully" });
+        }
+      });
+    } else {
+      return res
+        .status(401)
+        .json({ status: false, msg: `You don't have permission` });
+    }
   } catch (err) {
     res.status(500).json({ status: false, msg: err.message });
   }
@@ -154,20 +165,27 @@ router.get("/getPost/:id", auth, async (req, res) => {
   res.status(200).json(post);
 });
 
-router.delete("/deletePost/:id", async (req, res) => {
-  let id = req.params.id;
-
+router.delete("/deletePost/:id", auth, async (req, res) => {
+  const id = req.params.id;
+  const owner_id = req.user.id;
   try {
-    Post.findByIdAndRemove(id, (err, result) => {
-      if (err) {
-        res.status(500).json({ status: false, msg: err.message });
-      } else {
-        console.log(result);
-        return res
-          .status(200)
-          .json({ status: true, msg: "Delete post successfully" });
-      }
-    });
+    let post = await Post.findById(id);
+    if (post.owner_id === owner_id) {
+      Post.findByIdAndRemove(id, (err, result) => {
+        if (err) {
+          res.status(500).json({ status: false, msg: err.message });
+        } else {
+          console.log(result);
+          return res
+            .status(200)
+            .json({ status: true, msg: "Delete post successfully" });
+        }
+      });
+    } else {
+      return res
+        .status(401)
+        .json({ status: false, msg: `You don't have permission` });
+    }
   } catch (err) {
     res.status(500).json({ status: false, msg: err.message });
   }

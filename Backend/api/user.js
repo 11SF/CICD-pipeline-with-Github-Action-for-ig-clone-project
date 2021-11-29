@@ -5,9 +5,16 @@ let jwt = require("jsonwebtoken");
 
 router.post("/login", async (req, res) => {
   try {
-    let {email, password} = req.body;
-    const user = await User.findOne({email});
-    if (user && bcrypt.compare(password, user.password)) {
+    let { email, password } = req.body;
+    if (!email || !password) {
+      return res.json({
+        status: false,
+        msg: "Please enter email and password.",
+      });
+    }
+    const user = await User.findOne({ email });
+    const compare = await bcrypt.compare(password, user.password);
+    if (user && compare) {
       const token = jwt.sign(
         {
           id: user._id,
@@ -15,9 +22,9 @@ router.post("/login", async (req, res) => {
           email,
         },
         process.env.TOKEN_KEY,
-        {expiresIn: "24h"}
+        { expiresIn: "24h" }
       );
-      return res.json({status: true, token});
+      return res.json({ status: true, token });
     }
     res.json({
       status: false,
@@ -30,11 +37,11 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    let {username, password, email} = req.body;
+    let { username, password, email } = req.body;
     if (username && password && email) {
-      const checkUser = await User.findOne({email});
+      const checkUser = await User.findOne({ email });
       if (checkUser) {
-        return res.json({status: false, msg:"email is already registered"});
+        return res.json({ status: false, msg: "email is already registered" });
       }
 
       const hashPassword = await bcrypt.hash(password, 10);
@@ -52,16 +59,16 @@ router.post("/register", async (req, res) => {
           email,
         },
         process.env.TOKEN_KEY,
-        {expiresIn: "24h"}
+        { expiresIn: "24h" }
       );
 
       return res
         .status(201)
-        .json({status: true, msg: "Account created successfully"});
+        .json({ status: true, msg: "Account created successfully" });
     }
-    res.json({status: false, msg: "All input is required"});
+    res.json({ status: false, msg: "All input is required" });
   } catch (err) {
-    res.status(500).send({status: false, msg: err.message});
+    res.status(500).send({ status: false, msg: err.message });
   }
 });
 module.exports = router;

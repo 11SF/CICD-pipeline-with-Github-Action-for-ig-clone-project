@@ -1,7 +1,7 @@
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import jwt from "jwt-decode";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "./axios";
 import AuthModal from "./components/Auth";
@@ -39,15 +39,23 @@ function App() {
   }, [posts]);
   useEffect(() => {
     if (Object.keys(newPost).length === 0) return;
-    setPosts(posts => [...posts, newPost]);
+    setPosts((posts) => [...posts, newPost]);
   }, [newPost]);
-  const checkBottom = e => {
+  const checkBottom = (e) => {
     const bottom =
       (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) &
       (fetching === false) &
       (morePost === true);
     if (bottom) {
       setFetching(true);
+    }
+  };
+  const deletePost = async (postID) => {
+    let result = await axios.delete("/post/deletePost/" + postID, {
+      headers: { "x-access-token": sessionStorage.getItem("userToken") },
+    });
+    if (result.data.status) {
+      setPosts_r(posts_r.filter((e) => e._id !== postID));
     }
   };
 
@@ -70,13 +78,16 @@ function App() {
         <img className="app__headerImage" src={IG_LOGO} alt="instagram logo" />
         <div>
           {user ? (
-            <Button
-              onClick={() => {
-                signOut();
-              }}
-            >
-              Log Out
-            </Button>
+            <>
+              <Button>{user.username}</Button>
+              <Button
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                Log Out
+              </Button>
+            </>
           ) : (
             <>
               <Button onClick={() => setOpenModal(true)}>SignUp</Button>
@@ -97,14 +108,17 @@ function App() {
         )}
         <div className="app__post_view">
           <div className="app__post_wrapper">
-            {posts_r.map(({_id, username, caption, imagePath}) => (
+            {posts_r.map(({ _id, owner_id, username, caption, like_count, imagePath }) => (
               <Post
                 key={_id}
                 postID={_id}
+                post_owner_id={owner_id}
                 user={user}
                 username={username}
                 caption={caption}
+                like_count={like_count}
                 imageURL={imagePath}
+                deletePost={deletePost}
               />
             ))}
             {morePost ? (
