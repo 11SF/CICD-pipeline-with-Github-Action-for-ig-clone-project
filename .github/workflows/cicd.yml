@@ -53,12 +53,12 @@ jobs:
           details: Test Failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Test Cancelled
-          uses: rjstone/discord-webhook-notify@v1
-          if: cancelled()
-          with:
-            severity: warn
-            details: Test Cancelled!
-            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          details: Test Cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Login to DockerHub
         # if: success()
