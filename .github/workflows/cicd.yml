@@ -131,7 +131,7 @@ jobs:
       - name: Test Cancelled
         uses: rjstone/discord-webhook-notify@v1
         if: cancelled()
-          with:
+        with:
           severity: warn
           details: Test Cancelled!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
