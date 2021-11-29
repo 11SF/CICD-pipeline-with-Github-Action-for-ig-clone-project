@@ -36,6 +36,7 @@ router.post("/login", async (req, res) => {
       status: false,
       msg: "email or password incorrect. please try again.",
     });
+    
   } catch (err) {
     res.status(500).send(err.message);
   }
