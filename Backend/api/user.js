@@ -13,6 +13,12 @@ router.post("/login", async (req, res) => {
       });
     }
     const user = await User.findOne({ email });
+    if(!user) {
+      return res.json({
+        status: false,
+        msg: "email or password incorrect. please try again.",
+      });
+    }
     const compare = await bcrypt.compare(password, user.password);
     if (user && compare) {
       const token = jwt.sign(

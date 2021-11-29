@@ -55,7 +55,7 @@ function App() {
       headers: { "x-access-token": sessionStorage.getItem("userToken") },
     });
     if (result.data.status) {
-      setPosts_r(posts_r.filter((e) => e._id !== postID));
+      setPosts(posts.filter((e) => e._id !== postID));
     }
   };
 
