@@ -2,9 +2,9 @@ name: Ig Clone Project CICD Pipeline
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
   pull_request:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   Continuous_Integration_Frontend:

@@ -25,6 +25,9 @@ function App() {
       setUser(jwt(userToken));
     }
   }, []);
+  const setSession = (userToken) => {
+    setUser(jwt(userToken));
+  }
   const signOut = () => {
     setUser(null);
     sessionStorage.removeItem("userToken");
@@ -73,6 +76,7 @@ function App() {
         openModalLogin={openModalLogin}
         setOpenModalLogin={setOpenModalLogin}
         setUser={setUser}
+        setSession={setSession}
       />
       <div className="app__header">
         <img className="app__headerImage" src={IG_LOGO} alt="instagram logo" />

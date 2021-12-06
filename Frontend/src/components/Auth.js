@@ -11,6 +11,7 @@ function Auth({
   openModalLogin,
   setOpenModalLogin,
   setUser,
+  setSession
 }) {
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -65,7 +66,6 @@ function Auth({
   };
 
   const loginUser = async () => {
-    console.log(password);
     const payload = {
       email,
       password,
@@ -73,7 +73,8 @@ function Auth({
     const res = await axios.post("/user/login", payload);
     if (res.data.status) {
       sessionStorage.setItem("userToken", res.data.token);
-      refreshPage();
+      setSession(res.data.token)
+      // refreshPage();
       setOpenModalLogin(false);
       setErrorMsg("");
     } else {

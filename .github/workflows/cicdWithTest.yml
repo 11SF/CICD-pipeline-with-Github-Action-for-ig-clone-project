@@ -1,0 +1,46 @@
+name: Ig Clone Project CICD Pipeline
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  CI_and_CD:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Set ENV file
+        working-directory: ./Backend
+        run: echo ${{ secrets.ENV_PORT }} >> .env
+        run: echo ${{ secrets.ENV_DB_USERNAME }} >> .env
+        run: echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
+        run: echo ${{ secrets.ENV_DB_NAME }} >> .env
+        run: echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
+
+      - name: Run Backend in background
+        working-directory: ./Backend
+        run: npm install
+        run: npm start
+
+      - name: Run Frontend
+        working-directory: ./Frontend
+        run: npm install
+        run: npm test
+
+      if: success()
+        run: echo "hello world"
+
+      
