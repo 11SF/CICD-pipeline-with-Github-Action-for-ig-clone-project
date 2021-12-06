@@ -37,8 +37,10 @@ jobs:
 
       - name: Run Backend in background
         working-directory: ./Backend
-        run: ls | npm install 
-          | npm start
+        run: ls
+        run: npm install 
+        run: npm start 
+          
 
       # - name: Run Frontend
       #   working-directory: ./Frontend
