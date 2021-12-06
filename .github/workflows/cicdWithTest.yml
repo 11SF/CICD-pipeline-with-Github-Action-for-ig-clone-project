@@ -49,10 +49,11 @@ jobs:
           npm install 
           npm test
 
-
-      if: success()
-        run: echo "hello world"
-      if: failure()
-        run: echo "failllll"
+      - name: Success
+        if: success()
+          run: echo "hello world"
+      - name: Failure
+        if: failure()
+          run: echo "failllll"
 
       
