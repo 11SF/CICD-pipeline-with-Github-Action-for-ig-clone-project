@@ -40,13 +40,14 @@ jobs:
         run: |
           ls
           npm install 
-          npm start 
+          npm start &
           
 
-      # - name: Run Frontend
-      #   working-directory: ./Frontend
-      #   run: npm install 
-      #     | npm test
+      - name: Run Frontend
+        working-directory: ./Frontend
+        run: |
+          npm install 
+          npm test
 
 
       # if: success()
