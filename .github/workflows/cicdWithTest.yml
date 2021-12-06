@@ -25,13 +25,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # - name: Set ENV file
-      #   working-directory: ./Backend
-      #   run: echo ${{ secrets.ENV_PORT }} >> .env
-      #   run: echo ${{ secrets.ENV_DB_USERNAME }} >> .env
-      #   run: echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
-      #   run: echo ${{ secrets.ENV_DB_NAME }} >> .env
-      #   run: echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
+      - name: Set ENV file
+        working-directory: ./Backend
+        run: echo ${{ secrets.ENV_PORT }} >> .env
+        run: echo ${{ secrets.ENV_DB_USERNAME }} >> .env
+        run: echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
+        run: echo ${{ secrets.ENV_DB_NAME }} >> .env
+        run: echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
 
       # - name: Run Backend in background
       #   working-directory: ./Backend
