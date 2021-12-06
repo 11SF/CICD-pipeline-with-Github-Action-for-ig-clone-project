@@ -11,7 +11,7 @@ function Auth({
   openModalLogin,
   setOpenModalLogin,
   setUser,
-  setSession
+  setSession,
 }) {
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -73,7 +73,7 @@ function Auth({
     const res = await axios.post("/user/login", payload);
     if (res.data.status) {
       sessionStorage.setItem("userToken", res.data.token);
-      setSession(res.data.token)
+      setSession(res.data.token);
       // refreshPage();
       setOpenModalLogin(false);
       setErrorMsg("");
@@ -130,7 +130,10 @@ function Auth({
           <Input
             placeholder="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMsg("");
+            }}
             type="email"
           />
 

@@ -78,14 +78,26 @@ function PostUpload({ setNewPost }) {
     <div className="postupload">
       <input
         id="fileinput"
-        style={{ marginTop: "30px" }}
-        className="child"
+        style={{ marginTop: "30px", display: "none" }}
+        data-testid="fileinput"
         type="file"
         name="upload-file"
         accept="image/png, image/jpeg"
         onChange={chooseFile}
         ref={ref}
       />
+      <label
+        for="fileinput"
+        style={{
+          backgroundColor: "#55C6FF",
+          padding: "10px 15px",
+          marginTop: "30px",
+          border: "1px solid #f1f1f1",
+          color: "white",
+        }}
+      >
+        Select Image
+      </label>
       {/* <progress className="child" max={100} value={progress}/> */}
       <Input
         className="child"
@@ -127,7 +139,6 @@ function PostUpload({ setNewPost }) {
             color: "black",
           }}
           className="child"
-          
         >
           Upload
         </Button>

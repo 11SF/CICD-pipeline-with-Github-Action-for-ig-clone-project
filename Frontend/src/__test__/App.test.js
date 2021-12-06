@@ -4,12 +4,9 @@ import {
   screen,
   fireEvent,
   wait,
-  waitFor,
-  act,
-  debug,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import App from "./App";
+import App from "../App";
 describe("Test UI for Sign-in flows", () => {
   afterEach(() => {
     window.sessionStorage.removeItem("userToken");
@@ -109,16 +106,16 @@ describe("Test UI for Sign-in flows", () => {
 });
 
 describe("Test UI for Sign-up flows", () => {
-  const mockUser = {
-    email: "test04@gmail.com",
-    username: "test03",
+  let mockUser = {
+    email: "test**@gmail.com",
+    username: "test**",
     password: "1234",
     cf_password: "1234",
   };
   afterEach(() => {
     window.sessionStorage.removeItem("userToken");
   });
-  it("TC005: Show error message if an invalid email", async () => {
+  it("TC005: should show error message if an invalid email", async () => {
     render(<App />);
 
     const signInBtn = screen.getByText(/SignUp/);
@@ -150,7 +147,7 @@ describe("Test UI for Sign-up flows", () => {
     );
     expect(errorMsg).toBeInTheDocument();
   });
-  it("TC006: Show error message if sign up with duplicate email", async () => {
+  it("TC006: should show error message if sign up with duplicate email", async () => {
     render(<App />);
 
     const signInBtn = screen.getByText(/SignUp/);
@@ -180,7 +177,7 @@ describe("Test UI for Sign-up flows", () => {
     const errorMsg = await screen.findByText("email is already registered");
     expect(errorMsg).toBeInTheDocument();
   });
-  it("TC007: Show error message if sign up with password and confirm password does not match", async () => {
+  it("TC007: should show error message if sign up with password and confirm password does not match", async () => {
     render(<App />);
 
     const signInBtn = screen.getByText(/SignUp/);
@@ -210,54 +207,162 @@ describe("Test UI for Sign-up flows", () => {
     );
     expect(errorMsg).toBeInTheDocument();
   });
-  it("TC008: Sign Up and Sign In complate", async () => {
+  // it.only("TC008: Sign Up and Sign In complate", async () => {
+  //   let id = 2;
+
+  //   render(<App />);
+
+  //   const signUpBtn = screen.getByText(/SignUp/);
+  //   expect(signUpBtn).toBeInTheDocument();
+  //   fireEvent.click(signUpBtn);
+
+  //   const emailInput = screen.getByPlaceholderText("email");
+  //   const usernameInput = screen.getByPlaceholderText("username");
+  //   const passwordInput = screen.getByPlaceholderText("password");
+  //   const confirmPasswordInput =
+  //     screen.getByPlaceholderText("confirm password");
+  //   expect(emailInput).toBeInTheDocument();
+  //   expect(usernameInput).toBeInTheDocument();
+  //   expect(passwordInput).toBeInTheDocument();
+  //   expect(confirmPasswordInput).toBeInTheDocument();
+
+  //   while (true) {
+  //     // try {
+  //       mockUser.email = mockUser.email.replace("**", id);
+  //       mockUser.username = mockUser.username.replace("**", id);
+  //       console.log(mockUser.email);
+  //       fireEvent.change(emailInput, { target: { value: mockUser.email } });
+  //       fireEvent.change(usernameInput, {
+  //         target: { value: mockUser.username },
+  //       });
+  //       fireEvent.change(passwordInput, {
+  //         target: { value: mockUser.password },
+  //       });
+  //       fireEvent.change(confirmPasswordInput, {
+  //         target: { value: mockUser.cf_password },
+  //       });
+
+  //       const submitSignUpBtn = screen.getByText("Sign Up");
+  //       fireEvent.click(submitSignUpBtn);
+
+  //       const errorMsg = await screen.findByText("email is already registered");
+  //       console.log(errorMsg);
+  //       // await waitForElementToBeRemoved(() => screen.getByText("Sign Up"));
+  //       if (errorMsg) {
+  //         id += 1;
+  //         mockUser = {
+  //           email: "test**@gmail.com",
+  //           username: "test**",
+  //           password: "1234",
+  //           cf_password: "1234",
+  //         };
+  //       } else {
+  //         // await waitForElementToBeRemoved(() => screen.getByText("Sign Up"));
+  //         break;
+  //       }
+  //     // } catch (err) {
+  //       // await waitForElementToBeRemoved(() => screen.getByText("Sign Up"));
+  //       // break;
+  //     // }
+  //   }
+
+  //   // await waitForElementToBeRemoved(() => screen.getByText("Sign Up"));
+
+  //   const signInBtn = await screen.findByText(/SignIn/);
+  //   expect(signInBtn).toBeInTheDocument();
+  //   fireEvent.click(signInBtn);
+
+  //   const emailInput_1 = screen.getByPlaceholderText("email");
+  //   const passwordInput_1 = screen.getByPlaceholderText("password");
+  //   expect(emailInput_1).toBeInTheDocument();
+  //   expect(passwordInput_1).toBeInTheDocument();
+
+  //   fireEvent.change(emailInput_1, { target: { value: mockUser.email } });
+  //   fireEvent.change(passwordInput_1, { target: { value: mockUser.password } });
+
+  //   const submitLoginBtn = screen.getByText("Sign In");
+  //   fireEvent.click(submitLoginBtn);
+
+  //   await waitForElementToBeRemoved(() => screen.getByText(/Sign In/));
+  //   expect(screen.getByText(mockUser.username).textContent).toBe(
+  //     mockUser.username
+  //   );
+  //   expect(screen.getByText("Log Out")).toBeInTheDocument();
+  // });
+});
+
+describe("Test for Create Posts", () => {
+  const file = new File(["(⌐□_□)"], "photo.png", {
+    type: "image/png",
+  });
+  beforeEach(async () => {
     render(<App />);
 
-    const signUpBtn = screen.getByText(/SignUp/);
-    expect(signUpBtn).toBeInTheDocument();
-    fireEvent.click(signUpBtn);
+    const signInBtn = screen.getByText(/SignIn/);
+    fireEvent.click(signInBtn);
 
     const emailInput = screen.getByPlaceholderText("email");
-    const usernameInput = screen.getByPlaceholderText("username");
     const passwordInput = screen.getByPlaceholderText("password");
-    const confirmPasswordInput =
-      screen.getByPlaceholderText("confirm password");
-    expect(emailInput).toBeInTheDocument();
-    expect(usernameInput).toBeInTheDocument();
-    expect(passwordInput).toBeInTheDocument();
-    expect(confirmPasswordInput).toBeInTheDocument();
 
-    fireEvent.change(emailInput, { target: { value: mockUser.email } });
-    fireEvent.change(usernameInput, { target: { value: mockUser.username } });
-    fireEvent.change(passwordInput, { target: { value: mockUser.password } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: mockUser.cf_password },
+    fireEvent.change(emailInput, { target: { value: "test01@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "1234" } });
+
+    const submitLoginBtn = screen.getByText("Sign In");
+    fireEvent.click(submitLoginBtn);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/SignIn/));
+  });
+  afterEach(() => window.sessionStorage.removeItem("userToken"));
+  it("TC008: should disable the upload button when the image is not choose", () => {
+    const uploadBtn = screen.getByText(/Upload/i);
+    expect(uploadBtn).toBeDisabled();
+  });
+  it("TC009: should enable the upload button when the image is chosen", async () => {
+    const uploadBtn = screen.getByText(/Upload/i);
+    expect(uploadBtn).toBeDisabled();
+
+    const selectimg = screen.getByTestId("fileinput");
+    await wait(() => {
+      fireEvent.change(selectimg, { target: { files: [file] } });
     });
 
-    const submitSignUpBtn = screen.getByText("Sign Up");
-    fireEvent.click(submitSignUpBtn);
+    expect(uploadBtn).toBeEnabled();
+  });
+});
 
-    await waitForElementToBeRemoved(() => screen.getByText(/Sign Up/));
+describe("Test authorization", () => {
+  it("TC010: actions without authentication", async () => {
+    render(<App />);
+    expect(screen.getByText(/SignUp/)).toBeInTheDocument();
+    expect(screen.getByText(/SignIn/)).toBeInTheDocument();
+    expect(screen.getByText("Login to post")).toBeInTheDocument();
+    expect(await screen.findAllByText("Login to comment")).not.toBeNull();
+  });
+  it("TC011: actions within authentication", async () => {
+    render(<App />);
 
     const signInBtn = screen.getByText(/SignIn/);
     expect(signInBtn).toBeInTheDocument();
     fireEvent.click(signInBtn);
 
-    const emailInput_1 = screen.getByPlaceholderText("email");
-    const passwordInput_1 = screen.getByPlaceholderText("password");
-    expect(emailInput_1).toBeInTheDocument();
-    expect(passwordInput_1).toBeInTheDocument();
+    const emailInput = screen.getByPlaceholderText("email");
+    const passwordInput = screen.getByPlaceholderText("password");
+    expect(emailInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
 
-    fireEvent.change(emailInput_1, { target: { value: mockUser.email } });
-    fireEvent.change(passwordInput_1, { target: { value: mockUser.password } });
+    fireEvent.change(emailInput, { target: { value: "test01@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "1234" } });
 
     const submitLoginBtn = screen.getByText("Sign In");
     fireEvent.click(submitLoginBtn);
 
-    await waitForElementToBeRemoved(() => screen.getByText(/Sign In/));
-    expect(screen.getByText(mockUser.username).textContent).toBe(
-      mockUser.username
-    );
-    expect(screen.getByText("Log Out")).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.getByText(/SignIn/));
+    expect(screen.getByText("Select Image")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("write your caption here")
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByPlaceholderText("Add comment here...")
+    ).not.toBeNull();
   });
 });

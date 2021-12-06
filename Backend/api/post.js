@@ -9,7 +9,6 @@ const storage = multer.diskStorage({
     cb(null, "./public/images");
   },
   filename: (req, file, cb) => {
-    //   console.log(file);
     let filetype = "";
     if (file.mimetype === "image/png") {
       filetype = "png";
@@ -33,8 +32,10 @@ router.post("/createPost", auth, upload.single("file"), async (req, res) => {
   const username = req.user.username;
 
   if (!req.file) {
+    console.log("test fail");
     return res.status(400).json({ msg: "image is required" });
   }
+  console.log("test pass");
 
   const post = await Post.create({
     owner_id,
