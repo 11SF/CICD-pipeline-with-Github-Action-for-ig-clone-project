@@ -50,7 +50,9 @@ jobs:
           npm test
 
 
-      # if: success()
-      #   run: echo "hello world"
+      if: success()
+        run: echo "hello world"
+      if: failure()
+        run: echo "failllll"
 
       
