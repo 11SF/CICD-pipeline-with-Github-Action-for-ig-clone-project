@@ -28,10 +28,10 @@ jobs:
       - name: Set ENV file
         working-directory: ./Backend
         run: echo ${{ secrets.ENV_PORT }} >> .env
-        & echo ${{ secrets.ENV_DB_USERNAME }} >> .env
-        & echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
-        & echo ${{ secrets.ENV_DB_NAME }} >> .env
-        & echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
+          | echo ${{ secrets.ENV_DB_USERNAME }} >> .env
+          | echo ${{ secrets.ENV_DB_PASSWORD }} >> .env
+          | echo ${{ secrets.ENV_DB_NAME }} >> .env
+          | echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
 
       # - name: Run Backend in background
       #   working-directory: ./Backend
