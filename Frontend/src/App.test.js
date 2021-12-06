@@ -110,7 +110,7 @@ describe("Test UI for Sign-in flows", () => {
 
 describe("Test UI for Sign-up flows", () => {
   const mockUser = {
-    email: "test03@gmail.com",
+    email: "test04@gmail.com",
     username: "test03",
     password: "1234",
     cf_password: "1234",
