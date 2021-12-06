@@ -51,9 +51,9 @@ jobs:
 
       - name: Success
         if: success()
-          run: echo "hello world"
+        - run: echo "hello world"
       - name: Failure
         if: failure()
-          run: echo "failllll"
+        - run: echo "failllll"
 
       
