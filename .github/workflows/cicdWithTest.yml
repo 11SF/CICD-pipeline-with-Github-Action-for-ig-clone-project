@@ -35,15 +35,21 @@ jobs:
 
 
 
-      - name: Run Backend in background
+      - name: Install node modules for backend
         working-directory: ./Backend
         run: |
           ls
           npm install 
+          
+
+      - name: Run test backend and start server
+        working-directory: ./Backend
+        run: | 
+          npm test
           npm start &
           
 
-      - name: Run Frontend
+      - name: Install node modules for frontend and run test
         working-directory: ./Frontend
         run: |
           npm install 
