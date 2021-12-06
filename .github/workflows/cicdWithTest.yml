@@ -33,9 +33,11 @@ jobs:
           | echo ${{ secrets.ENV_DB_NAME }} >> .env 
           | echo ${{ secrets.ENV_TOKEN_KEY }} >> .env
 
+
+
       - name: Run Backend in background
         working-directory: ./Backend
-        run: npm install 
+        run: ls | npm install 
           | npm start
 
       # - name: Run Frontend
