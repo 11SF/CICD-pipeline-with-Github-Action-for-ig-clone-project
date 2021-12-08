@@ -32,7 +32,6 @@ router.post("/createPost", auth, upload.single("file"), async (req, res) => {
   const username = req.user.username;
 
   if (!req.file) {
-    console.log("test fail");
     return res.status(400).json({ msg: "image is required" });
   }
   console.log("test pass");
@@ -52,6 +51,9 @@ router.put("/createComment", auth, async (req, res) => {
     const username = req.user.username;
     const owner_id = req.user.id;
     const { text, id } = req.body;
+    if (!text || !id) {
+      res.status(500).json({ status: false, msg: "require text and id" });
+    }
     const post = await Post.findById(id);
     if (post) {
       const comment = await Comment.create({
@@ -75,9 +77,9 @@ router.put("/createComment", auth, async (req, res) => {
   }
 });
 
-router.put("/likePress/:id", async (req, res) => {
+router.put("/likePress/:id", auth, async (req, res) => {
   const id = req.params.id;
-  const owner_id = req.body.owner_id
+  const owner_id = req.user.id;
   try {
     if (!owner_id || !id) {
       return res.status(400).json({
@@ -94,14 +96,13 @@ router.put("/likePress/:id", async (req, res) => {
       if (isLike.length === 0) {
         arr_id = [...arr_id, owner_id];
         const result = await Post.findByIdAndUpdate(id, { like_count: arr_id });
-        console.log(result);
         return res
           .status(200)
           .json({ status: true, liked: true, like_count: arr_id });
       } else {
         arr_id = arr_id.filter((e) => e !== owner_id);
         const result = await Post.findByIdAndUpdate(id, { like_count: arr_id });
-        console.log(result);
+
         return res
           .status(200)
           .json({ status: true, liked: false, like_count: arr_id });
@@ -121,9 +122,8 @@ router.get("/getComment/:id", async (req, res) => {
       msg: "Require id  '/getComment/:id' for query data",
     });
   }
-  // const post = await Post.find({ _id: id }, { comments: 1 });
   const comments = await Comment.find({ post_id: id });
-  if (comments === []) {
+  if (comments.length === 0) {
     return res
       .status(400)
       .json({ status: false, msg: `Comment of post id:${id} is not found` });
@@ -141,7 +141,6 @@ router.delete("/deleteComment/:id", auth, async (req, res) => {
         if (err) {
           res.status(500).json({ status: false, msg: err.message });
         } else {
-          console.log(result);
           return res
             .status(200)
             .json({ status: true, msg: "Delete comment successfully" });
@@ -160,10 +159,15 @@ router.delete("/deleteComment/:id", auth, async (req, res) => {
 router.get("/getPost/:id", auth, async (req, res) => {
   let id = req.params.id;
 
-  const post = await Post.findById(id);
-  if (post) {
+  try {
+    const post = await Post.findById(id);
+    if (post) {
+      res.status(200).json({ status: true, post });
+    }
+    res.status(200).json({ status: false, msg: "post not found" });
+  } catch (err) {
+    res.status(500).json({ status: false, msg: err.message });
   }
-  res.status(200).json(post);
 });
 
 router.delete("/deletePost/:id", auth, async (req, res) => {
@@ -176,7 +180,6 @@ router.delete("/deletePost/:id", auth, async (req, res) => {
         if (err) {
           res.status(500).json({ status: false, msg: err.message });
         } else {
-          console.log(result);
           return res
             .status(200)
             .json({ status: true, msg: "Delete post successfully" });

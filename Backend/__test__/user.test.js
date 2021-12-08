@@ -26,7 +26,7 @@ describe("Login", () => {
       });
   });
 
-  it("Login success", () => {
+  it("Login success and return user token", () => {
     return request
       .post("/user/login")
       .send({

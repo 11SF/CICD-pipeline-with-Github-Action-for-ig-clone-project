@@ -1,6 +1,6 @@
 import request from "./client";
 
-describe("Require token for access", () => {
+describe("Test require token for access", () => {
   it("Create Post API", () => {
     return request.post("/post/createPost").expect(403);
   });
@@ -16,6 +16,4 @@ describe("Require token for access", () => {
   it("Delete Comment API", () => {
     return request.delete("/post/deleteComment/123").expect(403);
   });
-
-  
 });
