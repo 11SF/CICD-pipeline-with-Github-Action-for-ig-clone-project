@@ -7,7 +7,7 @@ on:
     branches: [dev]
 
 jobs:
-    CI:
+  CI:
     runs-on: ubuntu-latest
 
     strategy:
@@ -161,23 +161,9 @@ jobs:
           details: Deploy to AWS Success!!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-  AlertToTeam:
-    needs: [CD]
-    if: always()
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy to AWS Success
-        uses: rjstone/discord-webhook-notify@v1
-        if: env.WORKFLOW_CONCLUSION == 'success'
-        with:
-          severity: info
-          details: Deploy to AWS Success!!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
       - name: Deploy to AWS Failed
         uses: rjstone/discord-webhook-notify@v1
-        if: env.WORKFLOW_CONCLUSION == 'failure'
+        if: failure()
         with:
           severity: error
           details: Deploy to AWS Failed!!
@@ -185,8 +171,38 @@ jobs:
 
       - name: Deploy to AWS Cancelled
         uses: rjstone/discord-webhook-notify@v1
-        if: env.WORKFLOW_CONCLUSION == 'cancelled'
+        if: cancelled()
         with:
           severity: warn
           details: Deploy to AWS Cancelled!!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  # AlertToTeam:
+  #   needs: [CD]
+  #   if: always()
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Deploy to AWS Success
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       if: env.WORKFLOW_CONCLUSION == 'success'
+  #       with:
+  #         severity: info
+  #         details: Deploy to AWS Success!!
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  #     - name: Deploy to AWS Failed
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       if: env.WORKFLOW_CONCLUSION == 'failure'
+  #       with:
+  #         severity: error
+  #         details: Deploy to AWS Failed!!
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  #     - name: Deploy to AWS Cancelled
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       if: env.WORKFLOW_CONCLUSION == 'cancelled'
+  #       with:
+  #         severity: warn
+  #         details: Deploy to AWS Cancelled!!
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
