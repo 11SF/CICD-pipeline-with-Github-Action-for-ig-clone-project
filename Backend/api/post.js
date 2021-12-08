@@ -34,7 +34,6 @@ router.post("/createPost", auth, upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ msg: "image is required" });
   }
-  console.log("test pass");
 
   const post = await Post.create({
     owner_id,
@@ -92,7 +91,6 @@ router.put("/likePress/:id", auth, async (req, res) => {
     if (post.length !== 0) {
       let arr_id = post.like_count;
       let isLike = arr_id.filter((e) => e === owner_id);
-      console.log(isLike);
       if (isLike.length === 0) {
         arr_id = [...arr_id, owner_id];
         const result = await Post.findByIdAndUpdate(id, { like_count: arr_id });
@@ -162,11 +160,11 @@ router.get("/getPost/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(id);
     if (post) {
-      res.status(200).json({ status: true, post });
+      return res.status(200).json({ status: true, post });
     }
     res.status(200).json({ status: false, msg: "post not found" });
   } catch (err) {
-    res.status(500).json({ status: false, msg: err.message });
+    return res.status(500).json({ status: false, msg: "post not found" });
   }
 });
 

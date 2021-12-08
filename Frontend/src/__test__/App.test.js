@@ -100,7 +100,7 @@ describe("Test UI for Sign-in flows", () => {
     fireEvent.click(submitLoginBtn);
 
     await waitForElementToBeRemoved(() => screen.getByText(/SignIn/));
-    expect(screen.getByText("test01").textContent).toBe("test01");
+    expect(screen.getAllByText("test01")).not.toBe(null);
     expect(screen.getByText("Log Out")).toBeInTheDocument();
   });
 });
