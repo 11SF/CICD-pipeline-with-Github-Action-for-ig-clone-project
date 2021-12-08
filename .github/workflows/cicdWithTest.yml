@@ -7,7 +7,7 @@ on:
     branches: [dev]
 
 jobs:
-  CI_and_CD:
+  CI:
     runs-on: ubuntu-latest
 
     strategy:
@@ -42,23 +42,115 @@ jobs:
           npm install 
           npm start &
           
-
       - name: Run test backend 
         working-directory: ./Backend
         run: npm test
+
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          details: (Backend) Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: (Backend) Test Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Test Cancelled
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          details: (Backend) Test Cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push to DockerHub
+        if: success()
+        uses: docker/build-push-action@v2
+        with:
+          context: ./Backend
+          push: true
+          tags: 11sf/ig_clone_backend:latest
           
 
-      - name: Install node modules for frontend and run test
+      - name: Install node modules for frontend
         working-directory: ./Frontend
         run: |
           npm install 
-          npm test
 
-      - name: Success
+      - name: Run test frontend 
+        working-directory: ./Frontend
+        run: npm test
+
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1
         if: success()
-        run: echo "hello world"
-      - name: Failure
+        with:
+          severity: info
+          details: (Frontend) Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1
         if: failure()
-        run: echo "failllll"
+        with:
+          severity: error
+          details: (Frontend) Test Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Cancelled
+        uses: rjstone/discord-webhook-notify@v1
+        if: cancelled()
+        with:
+          severity: warn
+          details: (Frontend) Test Cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+
+      - name: Build and push to DockerHub
+        if: success()
+        uses: docker/build-push-action@v2
+        with:
+          context: ./Frontend
+          push: true
+          tags: 11sf/ig_clone_frontend:latest
+
+  CD:
+    needs: [CI]
+    if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./script
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+      - run: ls
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create EC2 and deploy application to EC2
+        if: success()
+        env:
+          KEY_PAIR_NAME: ${{ secrets.AWS_KEYPAIR_NAME }}
+          SECGROUP_ID: ${{ secrets.AWS_SECGROUP_ID }}
+        run: aws ec2 run-instances --image-id ami-04902260ca3d33422 --instance-type t2.micro  --key-name $KEY_PAIR_NAME --security-group-ids $SECGROUP_ID --user-data file://user_data_script.txt
 
       
