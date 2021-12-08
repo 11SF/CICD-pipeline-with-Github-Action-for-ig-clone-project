@@ -158,19 +158,21 @@ jobs:
         if: success()
         with:
           severity: info
-          details: Deploy to AWS Success
+          details: Deploy to AWS Success!!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Deploy to AWS Failed!
+
+      - name: Deploy to AWS Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
-          details: Deploy to AWS Failed!
+          details: Deploy to AWS Failed!!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Deploy to AWS Cancelled!
+
+      - name: Deploy to AWS Cancelled
         uses: rjstone/discord-webhook-notify@v1
         if: cancelled()
         with:
           severity: warn
-          details: Deploy to AWS Cancelled!
+          details: Deploy to AWS Cancelled!!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
