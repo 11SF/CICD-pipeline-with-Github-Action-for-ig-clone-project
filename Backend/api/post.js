@@ -123,7 +123,7 @@ router.get("/getComment/:id", async (req, res) => {
   const comments = await Comment.find({ post_id: id });
   if (comments.length === 0) {
     return res
-      .status(400)
+      .status(200)
       .json({ status: false, msg: `Comment of post id:${id} is not found` });
   }
   res.status(200).json({ status: true, comments: comments });
