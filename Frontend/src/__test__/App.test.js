@@ -174,7 +174,7 @@ describe("Test UI for Sign-up flows", () => {
     const submitLoginBtn = screen.getByText("Sign Up");
     fireEvent.click(submitLoginBtn);
 
-    const errorMsg = await screen.findByText("email is already registered");
+    const errorMsg = await screen.findByText("This email has already been registered. Please sign in");
     expect(errorMsg).toBeInTheDocument();
   });
   it("TC007: should show error message if sign up with password and confirm password does not match", async () => {
